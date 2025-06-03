@@ -1,0 +1,42 @@
+<?php
+
+namespace App\Repositories\Databases;
+
+use App\Repositories\Contracts\{{ interface }};
+use Illuminate\Support\Facades\DB;
+
+class {{ repository }} implements {{ interface }}
+{
+    protected $connection = 'mysql';
+    protected $table = '{{ table }}';
+
+    protected function query()
+    {
+        return DB::connection($this->connection)->table($this->table);
+    }
+
+    public function all()
+    {
+        return $this->query()->get();
+    }
+
+    public function find($id)
+    {
+        return $this->query()->where('id', $id)->first();
+    }
+
+    public function create(array $data)
+    {
+        return $this->query()->insertGetId($data);
+    }
+
+    public function update($id, array $data)
+    {
+        return $this->query()->where('id', $id)->update($data);
+    }
+
+    public function delete($id)
+    {
+        return $this->query()->where('id', $id)->delete();
+    }
+}
