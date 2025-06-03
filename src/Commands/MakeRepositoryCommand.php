@@ -1,6 +1,6 @@
 <?php
 
-namespace Sazl\SimpleRepo\Commands;
+namespace Sazl\LaravelRepokit\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;

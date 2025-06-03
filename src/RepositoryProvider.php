@@ -1,9 +1,9 @@
 <?php
 
-namespace Sazl\SimpleRepo;
+namespace Sazl\LaravelRepokit;
 
 use Illuminate\Support\ServiceProvider;
-use Sazl\SimpleRepo\Commands\MakeRepositoryCommand;
+use Sazl\LaravelRepokit\Commands\MakeRepositoryCommand;
 
 class RepositoryProvider extends ServiceProvider
 {

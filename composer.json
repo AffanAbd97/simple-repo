@@ -1,5 +1,5 @@
 {
-    "name": "sazl/simple-repo",
+    "name": "sazl/laravel-repokit",
     "description": "Repository Pattern implementation for Laravel",
     "type": "library",
     "require": {
@@ -15,7 +15,7 @@
     "license": "MIT",
     "autoload": {
         "psr-4": {
-            "Sazl\\SimpleRepo\\": "src/"
+            "Sazl\\LaravelRepokit\\": "src/"
         }
     },
     "authors": [
