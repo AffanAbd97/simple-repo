@@ -24,5 +24,13 @@
             "email": "affana959@gmail.com"
         }
     ],
-    "minimum-stability": "stable"
+    "minimum-stability": "stable",
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Sazl\\LaravelRepokit\\RepositoryProvider",
+                "Sazl\\LaravelRepokit\\ServiceLayerProvider"
+            ]
+        }
+    }
 }

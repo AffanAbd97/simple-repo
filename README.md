@@ -1,11 +1,31 @@
-# Laravel Repository Generator
+# Laravel RepoKit
 
-This package provides an Artisan command to generate a Repository and Interface for Laravel projects, implementing the Repository Pattern.
+![PHP](https://img.shields.io/badge/PHP-8.1+-blue)
+![Laravel](https://img.shields.io/badge/Laravel-10%2B-red)
+![License](https://img.shields.io/badge/license-MIT-green)
+
+A lightweight Laravel package that generates Repository and Interface scaffolding to enforce clean architecture and reduce boilerplate in backend applications.
+
+---
+
+## Why?
+
+In many Laravel projects, business logic and data access are tightly coupled, making the code harder to maintain, scale, and test.
+
+Laravel RepoKit helps you:
+- Separate concerns using the Repository Pattern
+- Maintain a clean and scalable architecture
+- Reduce repetitive boilerplate code
+- Speed up development with automated scaffolding
+
+---
 
 ## Requirements
 
 - PHP ^8.1
 - Laravel 10.x, 11.x, or 12.x
+
+---
 
 ## Installation
 
@@ -16,6 +36,8 @@ composer require sazl/laravel-repokit
 ```
 
 The service provider will be auto-discovered by Laravel.
+
+---
 
 ## Usage
 
@@ -31,6 +53,8 @@ This creates:
 - `app/Repositories/Contracts/UserRepositoryInterface.php`
 - `app/Repositories/Databases/UserRepository.php`
 
+---
+
 ### With Eloquent Model
 
 Generate a repository using an Eloquent model:
@@ -39,11 +63,70 @@ Generate a repository using an Eloquent model:
 php artisan make:repository User --model=User
 ```
 
-This creates the same files but the repository implementation uses Eloquent model injection instead of Query Builder.
+This creates the same files but uses Eloquent model injection instead of Query Builder.
+
+---
 
 ### Auto-Binding
 
-The command automatically adds the interface-to-implementation binding in your `AppServiceProvider::register()` method.
+The command automatically registers interface-to-implementation binding inside your `AppServiceProvider::register()` method.
+
+---
+
+## Example Output
+
+After running:
+
+```bash
+php artisan make:repository User --model=User
+```
+
+### Interface
+
+```php
+interface UserRepositoryInterface
+{
+    public function find(int $id);
+    public function all();
+}
+```
+
+### Implementation
+
+```php
+class UserRepository implements UserRepositoryInterface
+{
+    public function __construct(protected User $model) {}
+
+    public function find(int $id)
+    {
+        return $this->model->find($id);
+    }
+
+    public function all()
+    {
+        return $this->model->all();
+    }
+}
+```
+
+---
+
+## Use Case
+
+This package is ideal for:
+- Medium to large-scale Laravel applications
+- Teams enforcing clean architecture practices
+- Developers who want consistent repository structure
+- Projects requiring better separation of concerns
+
+---
+
+## Background
+
+This package is inspired by real-world backend development, where maintaining a clear separation between business logic and data access is essential for long-term scalability and maintainability.
+
+---
 
 ## Clone and Test Locally
 
@@ -62,29 +145,19 @@ composer install
 
 ### 3. Run Tests
 
-This package uses Orchestra Testbench for testing:
+This package uses Orchestra Testbench:
 
 ```bash
 ./vendor/bin/phpunit
 ```
 
+---
+
 ### 4. Test in a Laravel Project (Local Development)
 
-To test this package in a local Laravel project, add the repository to your Laravel project's `composer.json`.
+Add this package as a local repository in your Laravel project's `composer.json`.
 
-The `url` path can be:
-- **Relative path** - relative to your Laravel project's root directory
-- **Absolute path** - full path from disk drive
-
-**Example with relative path:**
-
-```
-Your folder structure:
-D:\Projects\
-├── my-laravel-app\      <-- Your Laravel project
-│   └── composer.json
-└── laravel-repokit\     <-- This package
-```
+#### Example (relative path)
 
 ```json
 {
@@ -100,31 +173,13 @@ D:\Projects\
 }
 ```
 
-**Example with absolute path:**
-
-```json
-{
-    "repositories": [
-        {
-            "type": "path",
-            "url": "D:/Projects/laravel-repokit"
-        }
-    ],
-    "require": {
-        "sazl/laravel-repokit": "*"
-    }
-}
-```
-
-> **Note:** On Windows, use forward slashes (`/`) or escaped backslashes (`\\`) in the path.
-
 Then run:
 
 ```bash
 composer update sazl/laravel-repokit
 ```
 
-Now you can use the `make:repository` command in your Laravel project.
+---
 
 ## Generated Files Structure
 
@@ -136,6 +191,8 @@ app/
     └── Databases/
         └── {Name}Repository.php
 ```
+
+---
 
 ## License
 

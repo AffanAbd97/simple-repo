@@ -1,0 +1,85 @@
+<?php
+
+namespace Sazl\LaravelRepokit\Commands;
+
+use Illuminate\Console\Command;
+use Illuminate\Filesystem\Filesystem;
+use Illuminate\Support\Str;
+
+class MakeRepositoryCommand extends Command
+{
+    protected $signature = 'make:service {name} {--R|repository=} {--E|-e}';
+    protected $description = 'Generate a new service with an interface and auto-bind it in AppServiceProvider';
+
+    public function handle()
+    {
+        $name = $this->argument('name');
+        $repoInput = $this->option('repository');
+        $repoInput = $this->option('model');
+        $isEmpty = $this->option('E');
+
+        $model = $repoInput ? (str_contains($repoInput, '\\') ? $repoInput : "App\\Repositories\\Databases\\$repoInput") : null;
+
+        $interfaceName = "{$name}ServiceInterface";
+        $serviceName = "{$name}Service";
+
+        $filesystem = new Filesystem();
+        $stubPath = __DIR__ . '/../../stubs';
+
+        $interfaceTemplate = file_get_contents($isEmpty ? "$stubPath/contracts/service-empty.contract.stub" : "$stubPath/contracts/service.contract.stub");
+        $interfaceContent = str_replace('{{ interface }}', $interfaceName, $interfaceTemplate);
+
+        $serviceStub = $isEmpty ? 'service-empty.stub' : 'service.stub';
+        $serviceTemplate = file_get_contents("$stubPath/$serviceStub");
+
+        $replacements = [
+            '{{ interface }}' => $interfaceName,
+            '{{ repository }}' => $serviceName,
+            '{{ modelFull }}' => $model,
+            '{{ modelClass }}' => $model ? class_basename($model) : '',
+            '{{ table }}' => Str::snake(Str::pluralStudly($name)),
+        ];
+
+        foreach ($replacements as $key => $value) {
+            $serviceTemplate = str_replace($key, $value, $serviceTemplate);
+        }
+
+        $filesystem->ensureDirectoryExists(app_path('Services/Contracts'));
+        $filesystem->ensureDirectoryExists(app_path('Services'));
+
+        $filesystem->put(app_path("Services/Contracts/{$interfaceName}.php"), $interfaceContent);
+        $filesystem->put(app_path("Services/{$serviceName}.php"), $serviceTemplate);
+
+        $this->addBindingToServiceProvider($interfaceName, $serviceName);
+        $this->info("✅ Service and interface created successfully!");
+    }
+
+    protected function addBindingToServiceProvider($interface, $service)
+    {
+        $providerPath = app_path('Providers/AppServiceProvider.php');
+        if (!file_exists($providerPath)) {
+            $this->error("⚠️ AppServiceProvider.php not found!");
+            return;
+        }
+
+        $content = file_get_contents($providerPath);
+        $binding = "        \$this->app->bind(\\App\\Services\\Contracts\\$interface::class, \\App\\Services\\$service::class);\n";
+
+        if (strpos($content, $binding) !== false) {
+            $this->info("ℹ️ Binding for $interface already exists.");
+            return;
+        }
+
+        $pattern = '/(public function register\(\): void\s*\{)(\n\s*)/';
+        $replacement = "$1\n$binding$2";
+
+        if (!preg_match($pattern, $content)) {
+            $this->error("❌ Could not find register() method in AppServiceProvider.");
+            return;
+        }
+
+        $content = preg_replace($pattern, $replacement, $content);
+        file_put_contents($providerPath, $content);
+        $this->info("✅ Binding for $interface added.");
+    }
+}
