@@ -8,14 +8,14 @@ use Illuminate\Support\Str;
 
 class MakeServiceCommand extends Command
 {
-    protected $signature = 'make:service {name} {--R|repository=} {--E|e}';
+    protected $signature = 'make:service {name} {--R|repository=} {--empty|e}';
     protected $description = 'Generate a new service with an interface and auto-bind it in AppServiceProvider';
 
     public function handle()
     {
         $name = $this->argument('name');
         $repoInput = $this->option('repository');
-        $isEmpty = $this->option('E');
+        $isEmpty = $this->option('e');
 
         $model = $repoInput ? (str_contains($repoInput, '\\') ? $repoInput : "App\\Repositories\\Databases\\$repoInput") : null;
 
