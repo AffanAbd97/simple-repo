@@ -15,7 +15,6 @@ class MakeServiceCommand extends Command
     {
         $name = $this->argument('name');
         $repoInput = $this->option('repository');
-        $repoInput = $this->option('model');
         $isEmpty = $this->option('E');
 
         $model = $repoInput ? (str_contains($repoInput, '\\') ? $repoInput : "App\\Repositories\\Databases\\$repoInput") : null;
