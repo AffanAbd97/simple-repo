@@ -6,7 +6,7 @@ use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
 
-class MakeRepositoryCommand extends Command
+class MakeServiceCommand extends Command
 {
     protected $signature = 'make:service {name} {--R|repository=} {--E|-e}';
     protected $description = 'Generate a new service with an interface and auto-bind it in AppServiceProvider';

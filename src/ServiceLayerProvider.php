@@ -3,7 +3,7 @@
 namespace Sazl\LaravelRepokit;
 
 use Illuminate\Support\ServiceProvider;
-use Sazl\LaravelRepokit\Commands\MakeRepositoryCommand;
+use Sazl\LaravelRepokit\Commands\MakeServiceCommand;
 
 class ServiceLayerProvider extends ServiceProvider
 {
@@ -25,7 +25,7 @@ class ServiceLayerProvider extends ServiceProvider
             ], 'service-stubs');
 
             $this->commands([
-                MakeRepositoryCommand::class,
+                MakeServiceCommand::class,
             ]);
         }
 
