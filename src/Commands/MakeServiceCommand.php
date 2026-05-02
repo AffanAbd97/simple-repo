@@ -20,7 +20,7 @@ class MakeServiceCommand extends Command
         $repoInput = $this->option('repository');
         $isEmpty = $this->option('e');
 
-        $repo = $nameResolver->repository($repoInput, true);
+        $repo = $nameResolver->repository($repoInput ? $repoInput : $name, true);
         $interfaceName = $nameResolver->service($name, true);
         $serviceName = $nameResolver->service($name);
 
