@@ -19,9 +19,8 @@ class MakeRepositoryCommand extends Command
         $modelInput = $this->option('model');
         $model = $modelInput ? (str_contains($modelInput, '\\') ? $modelInput : "App\\Models\\$modelInput") : null;
 
-        $validName = $nameResolver->repository($name);
-        $interfaceName = "{$validName}Interface";
-        $repositoryName = "{$validName}";
+        $interfaceName = $nameResolver->repository($name, true);
+        $repositoryName = $nameResolver->repository($name);
 
         $filesystem = new Filesystem();
         $stubPath = __DIR__ . '/../../stubs';

@@ -15,9 +15,9 @@ class NameResolver
      *   "ItemREPOSITORY"    → "ItemRepository"
      *   "user_profile"      → "UserProfileRepository"
      */
-    public static function repository(string $input): string
+    public static function repository(string $input, bool $isInterface = false): string
     {
-        return self::resolve($input, 'Repository');
+        return self::resolve($input, $isInterface ? 'RepositoryInterface' : 'Repository');
     }
 
     /**
@@ -29,9 +29,9 @@ class NameResolver
      *   "ItemSERVICE"   → "ItemService"
      *   "user_profile"  → "UserProfileService"
      */
-    public static function service(string $input): string
+    public static function service(string $input, bool $isInterface = false): string
     {
-        return self::resolve($input, 'Service');
+        return self::resolve($input, $isInterface ? 'ServiceInterface' : 'Service');
     }
 
     /**

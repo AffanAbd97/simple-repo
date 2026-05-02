@@ -20,10 +20,9 @@ class MakeServiceCommand extends Command
         $repoInput = $this->option('repository');
         $isEmpty = $this->option('e');
 
-        // $model = $repoInput ? (str_contains($repoInput, '\\') ? $repoInput : "App\\Repositories\\Databases\\$repoInput") : null;
-        $validName = $nameResolver->service($name);
-        $interfaceName = "{$validName}Interface";
-        $serviceName = "{$validName}";
+        $repo = $nameResolver->repository($repoInput, true);
+        $interfaceName = $nameResolver->service($name, true);
+        $serviceName = $nameResolver->service($name);
 
         $filesystem = new Filesystem();
         $stubPath = __DIR__ . '/../../stubs/services';
@@ -37,7 +36,7 @@ class MakeServiceCommand extends Command
         $replacements = [
             '{{ service_interface }}' => $interfaceName,
             '{{ service }}' => $serviceName,
-            '{{ repository_interface }}' => $repoInput,
+            '{{ repository_interface }}' => $repo,
         ];
 
         foreach ($replacements as $key => $value) {
