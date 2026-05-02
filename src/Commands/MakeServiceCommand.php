@@ -4,7 +4,6 @@ namespace Sazl\LaravelRepokit\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\Support\Str;
 
 class MakeServiceCommand extends Command
 {
@@ -17,7 +16,7 @@ class MakeServiceCommand extends Command
         $repoInput = $this->option('repository');
         $isEmpty = $this->option('e');
 
-        $model = $repoInput ? (str_contains($repoInput, '\\') ? $repoInput : "App\\Repositories\\Databases\\$repoInput") : null;
+        // $model = $repoInput ? (str_contains($repoInput, '\\') ? $repoInput : "App\\Repositories\\Databases\\$repoInput") : null;
 
         $interfaceName = "{$name}ServiceInterface";
         $serviceName = "{$name}Service";
@@ -34,7 +33,7 @@ class MakeServiceCommand extends Command
         $replacements = [
             '{{ service_interface }}' => $interfaceName,
             '{{ service }}' => $serviceName,
-            '{{ repository_interface }}' => $model,
+            '{{ repository_interface }}' => $repoInput,
         ];
 
         foreach ($replacements as $key => $value) {
