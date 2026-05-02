@@ -8,23 +8,20 @@ use Sazl\LaravelRepokit\Utils\NameResolver;
 
 class MakeServiceCommand extends Command
 {
-    protected $nameResolver;
 
 
     protected $signature = 'make:service {name} {--R|repository=} {--empty|e}';
     protected $description = 'Generate a new service with an interface and auto-bind it in AppServiceProvider';
-    public function __construct(NameResolver $resolver)
-    {
-        $this->nameResolver = $resolver;
-    }
+
     public function handle()
     {
+        $nameResolver = new NameResolver();
         $name = $this->argument('name');
         $repoInput = $this->option('repository');
         $isEmpty = $this->option('e');
 
         // $model = $repoInput ? (str_contains($repoInput, '\\') ? $repoInput : "App\\Repositories\\Databases\\$repoInput") : null;
-        $validName = $this->nameResolver->service($name);
+        $validName = $nameResolver->service($name);
         $interfaceName = "{$validName}Interface";
         $serviceName = "{$validName}";
 

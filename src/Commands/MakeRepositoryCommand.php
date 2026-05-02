@@ -11,18 +11,15 @@ class MakeRepositoryCommand extends Command
 {
     protected $signature = 'make:repository {name} {--M|model=}';
     protected $description = 'Generate a new repository with an interface and auto-bind it in AppServiceProvider';
-    protected $nameResolver;
-    public function __construct(NameResolver $resolver)
-    {
-        $this->nameResolver = $resolver;
-    }
+
     public function handle()
     {
+        $nameResolver = new NameResolver();
         $name = $this->argument('name');
         $modelInput = $this->option('model');
         $model = $modelInput ? (str_contains($modelInput, '\\') ? $modelInput : "App\\Models\\$modelInput") : null;
 
-        $validName = $this->nameResolver->service($name);
+        $validName = $nameResolver->repository($name);
         $interfaceName = "{$validName}Interface";
         $repositoryName = "{$validName}";
 
