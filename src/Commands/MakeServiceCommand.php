@@ -32,11 +32,9 @@ class MakeServiceCommand extends Command
         $serviceTemplate = file_get_contents("$stubPath/$serviceStub");
 
         $replacements = [
-            '{{ interface }}' => $interfaceName,
-            '{{ repository }}' => $serviceName,
-            '{{ modelFull }}' => $model,
-            '{{ modelClass }}' => $model ? class_basename($model) : '',
-            '{{ table }}' => Str::snake(Str::pluralStudly($name)),
+            '{{ service_interface }}' => $interfaceName,
+            '{{ service }}' => $serviceName,
+            '{{ repository_interface }}' => $model,
         ];
 
         foreach ($replacements as $key => $value) {
