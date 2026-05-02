@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 
 class MakeServiceCommand extends Command
 {
-    protected $signature = 'make:service {name} {--R|repository=} {--E|-e}';
+    protected $signature = 'make:service {name} {--R|repository=} {--E|e}';
     protected $description = 'Generate a new service with an interface and auto-bind it in AppServiceProvider';
 
     public function handle()
