@@ -4,12 +4,19 @@ namespace Sazl\LaravelRepokit\Commands;
 
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
+use Sazl\LaravelRepokit\Utils\NameResolver;
 
 class MakeServiceCommand extends Command
 {
+    protected $nameResolver;
+
+
     protected $signature = 'make:service {name} {--R|repository=} {--empty|e}';
     protected $description = 'Generate a new service with an interface and auto-bind it in AppServiceProvider';
-
+    public function __construct(NameResolver $resolver)
+    {
+        $this->nameResolver = $resolver;
+    }
     public function handle()
     {
         $name = $this->argument('name');
@@ -17,9 +24,9 @@ class MakeServiceCommand extends Command
         $isEmpty = $this->option('e');
 
         // $model = $repoInput ? (str_contains($repoInput, '\\') ? $repoInput : "App\\Repositories\\Databases\\$repoInput") : null;
-
-        $interfaceName = "{$name}ServiceInterface";
-        $serviceName = "{$name}Service";
+        $validName = $this->nameResolver->service($name);
+        $interfaceName = "{$validName}Interface";
+        $serviceName = "{$validName}";
 
         $filesystem = new Filesystem();
         $stubPath = __DIR__ . '/../../stubs/services';

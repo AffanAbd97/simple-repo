@@ -5,20 +5,26 @@ namespace Sazl\LaravelRepokit\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Str;
+use Sazl\LaravelRepokit\Utils\NameResolver;
 
 class MakeRepositoryCommand extends Command
 {
     protected $signature = 'make:repository {name} {--M|model=}';
     protected $description = 'Generate a new repository with an interface and auto-bind it in AppServiceProvider';
-
+    protected $nameResolver;
+    public function __construct(NameResolver $resolver)
+    {
+        $this->nameResolver = $resolver;
+    }
     public function handle()
     {
         $name = $this->argument('name');
         $modelInput = $this->option('model');
         $model = $modelInput ? (str_contains($modelInput, '\\') ? $modelInput : "App\\Models\\$modelInput") : null;
 
-        $interfaceName = "{$name}RepositoryInterface";
-        $repositoryName = "{$name}Repository";
+        $validName = $this->nameResolver->service($name);
+        $interfaceName = "{$validName}Interface";
+        $repositoryName = "{$validName}";
 
         $filesystem = new Filesystem();
         $stubPath = __DIR__ . '/../../stubs';
